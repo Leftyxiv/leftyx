@@ -5,14 +5,16 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: leftyx
   artifacts:
-    - image: leftyxiv/auth
+    - image: us.gcr.io/leftyx/auth
       context: auth
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: '/**/*.ts'
+          - src: "/**/*.ts"
             dest: .
