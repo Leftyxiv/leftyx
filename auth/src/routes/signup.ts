@@ -20,6 +20,7 @@ router.post(
     }
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email })
+    
     if (existingUser){
       console.log('Email in use');
       return res.send({});
