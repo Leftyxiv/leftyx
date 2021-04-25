@@ -26,6 +26,8 @@ router.post(
     }
 
     const user = User.build({ email, password })
+    await user.save();
+    res.status(201).send(user)
 
   },
 );
