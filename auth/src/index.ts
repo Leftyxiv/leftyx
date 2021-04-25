@@ -29,6 +29,9 @@ app.all('*', async () => {
 app.use(errorHandler);
 
 const start = async () => {
+  if (!process.env.jwt_key){
+    throw new Error('jwt key not defined')
+  }
   try{
     await mongoose.connect('mongodb://auth-mongo-srv:27017/auth', {
       useNewUrlParser: true,
