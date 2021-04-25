@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     select: false
   }
 })
+
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 }
