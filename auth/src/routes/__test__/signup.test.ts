@@ -32,8 +32,18 @@ it("returns a 400 on bad sign up, invalid pass", async () => {
 });
 
 it("returns a 400 on bad sign up, invalid everything", async () => {
-  return request(app)
+  return request(app).post("/api/users/signup").send({}).expect(400);
+});
+
+it("disallows duplicate emails", async () => {
+  await request(app).post("/api/users/signup").send({ email: "test@test.com", password: "pass" }).expect(201);
+  await request(app).post("/api/users/signup").send({ email: "test@test.com", password: "pass" }).expect(400);
+});
+
+it("sets a cookie after successful sign up", async () => {
+  const res = await request(app)
     .post("/api/users/signup")
-    .send({})
-    .expect(400);
+    .send({ email: "test@test.com", password: "pass" })
+    .expect(201);
+  expect(res.get("Set-Cookie")).toBeDefined();
 });
