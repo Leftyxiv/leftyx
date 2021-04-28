@@ -1,11 +1,12 @@
+
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from 'jsonwebtoken';
 
 import { User } from '../models/User';
 
-import { validateRequest } from './../middlewares/validateRequest';
-import { BadRequestError } from '../errors/badRequestErrors';
+import { validateRequest, BadRequestError } from '@leftyx/common';
+
 
 const router = express.Router();
 
