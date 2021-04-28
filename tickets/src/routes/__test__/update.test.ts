@@ -23,6 +23,23 @@ it("returns a 401 if user is not authenticated", async () => {
     })
     .expect(401);
 });
-it("returns a 401 if the user does not own a ticker", async () => {});
+it("returns a 401 if the user does not own a ticker", async () => {
+  const res = await request(app)
+  .put(`/api/tickets`)
+  .set("Cookie", global.signin())
+  .send({
+    title: "title",
+    price: 20,
+  })
+
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', global.signin())
+    .send({
+      title: "updated title",
+      price: 200,
+    })
+    .expect(401)
+});
 it("returns a 400 if the user provides and invalid title or price", async () => {});
 it("updates the ticket provided valid inputs", async () => {});
