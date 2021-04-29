@@ -1,5 +1,7 @@
 import nats from 'node-nats-streaming';
 
+console.clear()
+
 const stan = nats.connect('leftyx', 'abc', {
   url: 'http://localhost:4222'
 });
