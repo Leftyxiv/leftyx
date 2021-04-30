@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { requireAuth, validateRequest } from "@leftyx/common"
 import { Ticket } from '../models/Ticket';
+import { TicketCreatedPublisher } from '../events/publishers/TicketCreatedPublisher';
 
 
 const router = express.Router();
@@ -14,6 +15,12 @@ router.post('/api/tickets', requireAuth, [
   const { title, price } = req.body;
   const ticket = Ticket.build({title, price, userId: req.currentUser!.id})
   await ticket.save()
+  new TicketCreatedPublisher(client).publish({
+    id: ticket.id,
+    title: ticket.title,
+    price: ticket.price,
+    userId: ticket.userId,
+  })
   res.status(201).send(ticket)
 })
 
