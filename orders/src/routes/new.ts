@@ -9,6 +9,8 @@ import { Order } from '../models/Order';
 
 const router = express.Router()
 
+const EXPIRATION_WINDOW_SECONDS = 15 * 60
+
 router.post('/api/orders', requireAuth, [
   body('ticketId')
     .not().isEmpty().custom((input: string) => mongoose.Types.ObjectId.isValid(input)).withMessage('a ticket id must be provided')
@@ -18,21 +20,30 @@ router.post('/api/orders', requireAuth, [
   // find the ticket the user is trying to order
   const ticket = await Ticket.findById(ticketId);
   if (!ticket){
-    throw new NotFoundError;
+    throw new NotFoundError();
   }
 
   // Make sure that the ticket is not already reserved
-  const existingOrder = await Order.findOne({ ticket: ticket, status: { $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete] } });
-  if (existingOrder){
+  const isReserved = ticket.isReserved();
+  if (isReserved){
     throw new BadRequestError('Ticket is already reserved!');
   }
 
   // calculate an expiration date for this order
+  const expiration = new Date();
+  expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS)
 
   // build the order and save it to the database
+  const order = Order.build({
+    userId: req.currentUser!.id,
+    status: OrderStatus.Created,
+    expiresAt: expiration,
+    ticket,
+  })
+  await order.save()
 
   // publish to other services that an order has been created
-  res.send({})
+  res.status(201).send(order);
 })
 
 export { router as newOrdersRouter }
