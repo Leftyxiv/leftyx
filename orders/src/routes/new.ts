@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import express, { Request, Response } from 'express';
-import { requireAuth, validateRequest, NotFoundError } from "@leftyx/common"
+import { requireAuth, validateRequest, NotFoundError, OrderStatus, BadRequestError } from "@leftyx/common"
 import { body } from 'express-validator';
 
 import { Ticket } from '../models/Ticket';
@@ -22,6 +22,10 @@ router.post('/api/orders', requireAuth, [
   }
 
   // Make sure that the ticket is not already reserved
+  const existingOrder = await Order.findOne({ ticket: ticket, status: { $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete] } });
+  if (existingOrder){
+    throw new BadRequestError('Ticket is already reserved!');
+  }
 
   // calculate an expiration date for this order
 
