@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+
 import { OrderStatus } from '@leftyx/common';
+export { OrderStatus };
 
 import { TicketDoc } from './Ticket';
 
