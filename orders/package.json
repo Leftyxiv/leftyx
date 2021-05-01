@@ -1,7 +1,7 @@
 {
-  "name": "tickets",
+  "name": "orders",
   "version": "1.0.0",
-  "description": "tickets",
+  "description": "orders",
   "main": "index.js",
   "scripts": {
     "start": "ts-node-dev --poll src/index.ts",
