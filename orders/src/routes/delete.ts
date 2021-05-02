@@ -15,7 +15,7 @@ router.delete("/api/orders/:orderId", async (req: Request, res: Response) => {
   }
   order.status = OrderStatus.Cancelled;
   await order.save();
-  res.send(order);
+  res.status(204).send(order);
 });
 
 export { router as deleteOrdersRouter };
