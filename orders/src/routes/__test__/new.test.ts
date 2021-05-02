@@ -31,9 +31,7 @@ it("successfully creates the order", async () => {
   const ticket = Ticket.build({ title: "concert", price: 20 });
   await ticket.save();
 
-  const res = await request(app)
-    .post("/api/orders")
-    .set("Cookie", global.signin())
-    .send({ ticketId: ticket.id })
-    .expect(400);
+  await request(app).post("/api/orders").set("Cookie", global.signin()).send({ ticketId: ticket.id }).expect(400);
 });
+
+it.todo("emits an order created event");
