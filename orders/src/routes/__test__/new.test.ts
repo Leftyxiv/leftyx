@@ -1,9 +1,13 @@
+import { natsWrapper } from './../../__mocks__/natsWrapper';
 import request from "supertest";
 import mongoose from "mongoose";
 
 import { app } from "../../app";
 import { Order, OrderStatus } from "../../models/Order";
 import { Ticket } from "../../models/Ticket";
+import { getEffectiveTypeParameterDeclarations } from 'typescript';
+
+
 
 it("returns an error if the ticket does not exist", async () => {
   const ticketId = mongoose.Types.ObjectId;
@@ -34,4 +38,10 @@ it("successfully creates the order", async () => {
   await request(app).post("/api/orders").set("Cookie", global.signin()).send({ ticketId: ticket.id }).expect(400);
 });
 
-it.todo("emits an order created event");
+it("emits an order created event", async () => {
+  const ticket = Ticket.build({ title: "concert", price: 20 });
+  await ticket.save();
+
+  await request(app).post("/api/orders").set("Cookie", global.signin()).send({ ticketId: ticket.id }).expect(400);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
