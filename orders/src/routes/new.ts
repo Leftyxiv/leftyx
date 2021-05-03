@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 import express, { Request, Response } from "express";
-import { requireAuth, validateRequest, NotFoundError, OrderStatus, BadRequestError } from "@leftyx/common";
 import { body } from "express-validator";
 
+import { requireAuth, validateRequest, NotFoundError, OrderStatus, BadRequestError } from "@leftyx/common";
 import { Ticket } from "../models/Ticket";
 import { Order } from "../models/Order";
+
+
+import { natsWrapper } from '../natsWrapper';
+import { OrderCreatedPublisher } from './../events/publishers/orderCreatedPublisher';
 
 const router = express.Router();
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
@@ -46,6 +50,16 @@ router.post(
       ticket,
     });
     await order.save();
+    new OrderCreatedPublisher(natsWrapper.client).publish({ 
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price
+      }
+    })
 
     // publish to other services that an order has been created
     res.status(201).send(order);
