@@ -4,7 +4,7 @@ import { Subjects, Listener, TicketUpdatedEvent } from "@leftyx/common";
 import { Ticket } from "../../models/Ticket";
 import { queueGroupName } from "./queueGroupName";
 
-export class TickertUpdatedListener extends Listener<TicketUpdatedEvent> {
+export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
   subject: Subjects.TicketUpdated = Subjects.TicketUpdated;
   queueGroupName = queueGroupName;
   async onMessage(data: TicketUpdatedEvent["data"], msg: Message) {

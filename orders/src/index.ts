@@ -1,7 +1,11 @@
+
 import mongoose from "mongoose";
 
 import { app } from "./app";
 import { natsWrapper } from './natsWrapper';
+
+import { TicketUpdatedListener } from './events/listeners/ticketUpdatedListener';
+import { TicketCreatedListener } from './events/listeners/ticketCreatedListener';
 
 
 const start = async () => {
@@ -34,6 +38,8 @@ const start = async () => {
   // @ts-ignore
   process.on("SIGTERM", () => natsWrapper.client.close());
   
+  new TicketCreatedListener(natsWrapper.client).listen();
+  new TicketUpdatedListener(natsWrapper.client).listen();
 
 
 
