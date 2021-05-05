@@ -31,13 +31,15 @@ const setup = async () => {
 it('finds updates and saves the ticket', async () => {
   const { msg, data, ticket, listener } = await setup();
   await listener.onMessage(data, msg);
-
+  
   const updatedTicket = await Ticket.findById(ticket.id);
-
+  
   expect(updatedTicket!.title).toEqual(data.title);
   expect(updatedTicket!.price).toEqual(data.price);
 })
 
-it('acks the whatever', async () => {
-
+it('acks the message', async () => {
+  const { msg, data, listener } = await setup();
+  await listener.onMessage(data, msg);
+  expect(msg.ack).toHaveBeenCalled();
 })
