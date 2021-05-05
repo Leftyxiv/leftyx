@@ -1,3 +1,4 @@
+import mongoose  from 'mongoose';
 
 import request  from 'supertest';
 import { app } from '../../app'
@@ -7,6 +8,7 @@ import { natsWrapper} from '../../__mocks__/natsWrapper'
 
 it('successfully cancels an order', async () => {
   const ticket = Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 25
   })
@@ -24,6 +26,7 @@ it('successfully cancels an order', async () => {
 
 it('emits an order cancelled event', async () => {
   const ticket = Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 25
   })

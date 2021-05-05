@@ -43,3 +43,16 @@ it('acks the message', async () => {
   await listener.onMessage(data, msg);
   expect(msg.ack).toHaveBeenCalled();
 })
+
+
+it('does not ack the event if the event is out of order', async () => {
+  const { msg, data, listener, ticket } = await setup();
+  data.version = 10;
+
+  try {
+    await listener.onMessage(data, msg);
+  } catch (err) {
+
+  }
+  expect(msg.ack).not.toHaveBeenCalled();
+})
