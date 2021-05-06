@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 
 
-import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError } from "@leftyx/common";
+import { requireAuth, validateRequest, NotFoundError, NotAuthorizedError, BadRequestError } from "@leftyx/common";
 import { Ticket } from "../models/Ticket";
 import { TicketUpdatedPublisher } from './../events/publishers/TicketUpdatedPublisher';
 import { natsWrapper } from './../natsWrapper';
@@ -21,6 +21,9 @@ router.put(
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) {
       throw new NotFoundError();
+    }
+    if (ticket.orderId){
+      throw new BadRequestError('Cannot edit a ticket that is pending sale')
     }
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
