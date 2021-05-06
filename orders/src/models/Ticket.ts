@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 import { Order, OrderStatus } from "./Order";
 
@@ -18,7 +18,7 @@ export interface TicketDoc extends mongoose.Document {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
-  findByEvent(data: { id: string, version: number}): Promise<TicketDoc | null>
+  findByEvent(data: { id: string; version: number }): Promise<TicketDoc | null>;
 }
 
 const schema = new mongoose.Schema(
@@ -43,7 +43,7 @@ const schema = new mongoose.Schema(
   },
 );
 
-schema.set('versionKey', 'version');
+schema.set("versionKey", "version");
 schema.plugin(updateIfCurrentPlugin);
 
 schema.statics.build = (attrs: TicketAttrs) => {
@@ -53,7 +53,7 @@ schema.statics.build = (attrs: TicketAttrs) => {
     price: attrs.price,
   });
 };
-schema.statics.findByEvent = (data: { id: string, version: number }) => {
+schema.statics.findByEvent = (data: { id: string; version: number }) => {
   return Ticket.findOne({ _id: data.id, version: data.version - 1 });
 };
 
@@ -62,6 +62,8 @@ schema.methods.isReserved = async function () {
     ticket: this,
     status: { $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete] },
   });
+  
+  console.log(!!existingOrder)
   return !!existingOrder;
 };
 

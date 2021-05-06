@@ -1,5 +1,5 @@
 import { natsWrapper } from './natsWrapper';
-
+import { OrderCreatedListener } from './events/listeners/OrderCreatedListener';
 
 
 
@@ -28,6 +28,7 @@ const start = async () => {
   // @ts-ignore
   process.on("SIGTERM", () => natsWrapper.client.close());
   
+  new OrderCreatedListener(natsWrapper.client).listen();
   } catch (err) {
     
   }
