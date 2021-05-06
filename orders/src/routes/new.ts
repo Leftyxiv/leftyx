@@ -6,9 +6,8 @@ import { requireAuth, validateRequest, NotFoundError, OrderStatus, BadRequestErr
 import { Ticket } from "../models/Ticket";
 import { Order } from "../models/Order";
 
-
-import { natsWrapper } from '../natsWrapper';
-import { OrderCreatedPublisher } from './../events/publishers/orderCreatedPublisher';
+import { natsWrapper } from "../natsWrapper";
+import { OrderCreatedPublisher } from "./../events/publishers/orderCreatedPublisher";
 
 const router = express.Router();
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
@@ -49,7 +48,7 @@ router.post(
       ticket,
     });
     await order.save();
-    new OrderCreatedPublisher(natsWrapper.client).publish({ 
+    new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
       status: order.status,
       userId: order.userId,
@@ -57,9 +56,9 @@ router.post(
       version: order.version,
       ticket: {
         id: ticket.id,
-        price: ticket.price
-      }
-    })
+        price: ticket.price,
+      },
+    });
 
     // publish to other services that an order has been created
     res.status(201).send(order);

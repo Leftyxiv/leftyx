@@ -1,12 +1,10 @@
-import { natsWrapper } from './../../__mocks__/natsWrapper';
+import { natsWrapper } from '../../natsWrapper';
 import request from "supertest";
 import mongoose from "mongoose";
 
 import { app } from "../../app";
 import { Order, OrderStatus } from "../../models/Order";
 import { Ticket } from "../../models/Ticket";
-import { getEffectiveTypeParameterDeclarations } from 'typescript';
-
 
 
 it("returns an error if the ticket does not exist", async () => {
@@ -29,7 +27,7 @@ it("returns an error if the ticket is already reserved", async () => {
   });
   await order.save();
 
-  await request(app).post("/api/orders").set("Cookie", global.signin()).send({ ticketId: ticket.id }).expect(200);
+  await request(app).post("/api/orders").set("Cookie", global.signin()).send({ ticketId: ticket.id }).expect(400);
 });
 
 it("successfully creates the order", async () => {
