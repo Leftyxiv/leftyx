@@ -5,8 +5,6 @@ import { OrderCreatedEvent, OrderStatus } from "@leftyx/common";
 import { OrderCreatedListener } from "./../OrderCreatedListener";
 import { natsWrapper } from "../../../natsWrapper";
 
-import request from "supertest";
-import { app } from "../../../app";
 import { Ticket } from "../../../models/Ticket";
 
 const setup = async () => {
