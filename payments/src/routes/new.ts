@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { requireAuth, validateRequest, BadRequestError, NotFoundError, NotAuthorizedError, OrderStatus } from '@leftyx/common';
 import { Order } from '../models/Order';
+import { stripe } from '../stripe';
 
 const router = express.Router()
 
@@ -21,6 +22,12 @@ router.post('/api/payments', requireAuth, [
   if(order.status === OrderStatus.Cancelled){
     throw new BadRequestError('Order was already cancelled.')
   }
+
+  await stripe.charges.create({
+    currency: 'usd',
+    amount: order.price * 100,
+    source: token,
+  })
   res.send('arjtdujrtdxcutf')
 })
 
