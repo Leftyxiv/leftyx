@@ -35,7 +35,6 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: OrderStatus,
   }
 }, {
   toJSON: {
