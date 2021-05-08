@@ -9,7 +9,7 @@ const router = express.Router()
 router.post('/api/payments', requireAuth, [
   body('token').not().isEmpty(),
   body('orderId').not().isEmpty()
-], async (req: Request, res: Response) => {
+], validateRequest, async (req: Request, res: Response) => {
   const { token, orderId } = req.body;
 
   const order = await Order.findById(orderId);
@@ -27,7 +27,7 @@ router.post('/api/payments', requireAuth, [
     currency: 'usd',
     amount: order.price * 100,
     source: token,
-  })
+  });
   res.send('arjtdujrtdxcutf')
 })
 
