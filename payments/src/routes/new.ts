@@ -28,7 +28,7 @@ router.post('/api/payments', requireAuth, [
     amount: order.price * 100,
     source: token,
   });
-  res.send('arjtdujrtdxcutf')
+  res.status(201).send('arjtdujrtdxcutf')
 })
 
 export { router as createChargeRouter };
