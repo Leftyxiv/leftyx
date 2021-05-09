@@ -1,4 +1,4 @@
-import { currentUser } from "./../../middlewares/currentUser";
+import { currentUser } from "@leftyx/common";
 import request from "supertest";
 import { app } from "../../app";
 
