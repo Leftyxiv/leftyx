@@ -41,7 +41,7 @@ router.post('/api/payments', requireAuth, [
     stripeId: payment.stripeId,
   })
   
-  res.status(201).send({ success: 'true' })
+  res.status(201).send({ status: 'success', id: payment.id })
 })
 
 export { router as createChargeRouter };
