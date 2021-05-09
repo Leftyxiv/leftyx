@@ -1,7 +1,7 @@
 import React from "react";
 // import buildClient from '../api/buildClient';
 import Link from 'next/link';
-// WELCOME TO LEFTYX
+// WELCOME TO LEFTYX - pushing again
 const LandingPage = ({ currentUser, tickets }) => {
   const ticketList = tickets.map((ticket) => {
     return (
