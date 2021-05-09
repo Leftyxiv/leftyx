@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Order } from "../../models/Order";
 import { OrderStatus } from "@leftyx/common";
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/Payment';
 
 
 it("returns an error when the order does not exist", async () => {
@@ -73,4 +74,7 @@ const stripeCharges = await stripe.charges.list({ limit: 15 });
 const stripeCharge = stripeCharges.data.find(charge => charge.amount === price * 100);
 
 expect(stripeCharge).toBeDefined();
+
+const payment = await Payment.findOne({ orderId: order.id, stripeId: stripeCharge!.id })
+expect(payment).not.toBeNull();
 });
